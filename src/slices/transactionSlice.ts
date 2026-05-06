@@ -1,29 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Transaction } from "@/types/payment";
 
-const loadFromLocalStorage = (): Transaction[] => {
-  if (typeof window === "undefined") return [];
-
-  try {
-    const storedState = localStorage.getItem("transactions");
-    return storedState ? JSON.parse(storedState) : [];
-  } catch {
-    return [];
-  }
-};
-
-const saveToStorage = (transactions: Transaction[]) => {
-  if (typeof window === "undefined") return;
-
-  localStorage.setItem("transactions", JSON.stringify(transactions));
-};
-
 interface TransactionState {
   transactions: Transaction[];
 }
 
 const initialState: TransactionState = {
-  transactions: loadFromLocalStorage(),
+  transactions: [],
 };
 
 const transactionSlice = createSlice({
@@ -32,7 +15,6 @@ const transactionSlice = createSlice({
   reducers: {
     setTransactions: (state, action: PayloadAction<Transaction[]>) => {
       state.transactions = action.payload;
-      saveToStorage(state.transactions);
     },
 
     addOrUpdateTransaction: (state, action: PayloadAction<Transaction>) => {
@@ -48,21 +30,16 @@ const transactionSlice = createSlice({
       } else {
         state.transactions.push(action.payload);
       }
-
-      saveToStorage(state.transactions);
     },
 
     removeTransaction: (state, action: PayloadAction<string>) => {
       state.transactions = state.transactions.filter(
         (tx) => tx.id !== action.payload
       );
-
-      saveToStorage(state.transactions);
     },
 
     clearTransactions: (state) => {
       state.transactions = [];
-      saveToStorage(state.transactions);
     },
   },
 });
