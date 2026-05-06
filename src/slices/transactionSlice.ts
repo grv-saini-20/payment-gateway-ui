@@ -74,4 +74,4 @@ export const {
   clearTransactions,
 } = transactionSlice.actions;
 
-export default transactionSlice.reducer;
+export const transactionReducer = transactionSlice.reducer;
