@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { PaymentStatus } from "@/types/payment";
-import { error } from "console";
 
 interface PaymentState {
     status: PaymentStatus;
@@ -27,13 +26,19 @@ const paymentSlice = createSlice({
             state.error = null;
         },
         paymentSuccess: (state, action: PayloadAction<string>) => {
+            if(state.status !== "processing") return; //guard to check if payment is in processing state
             state.status = "success";
+            state.currentTransactionId = action.payload;
+            state.error = null;
+            state.attempts = 0;
         },
         paymentFailed: (state, action: PayloadAction<string>) => {
+            if (state.status !== "processing") return;
             state.status = "failed";
             state.error = action.payload;
         },
         paymentTimeout: (state) => {
+            if (state.status !== "processing") return;
             state.status = "timeout";
             state.error = "Payment timed out. Please try again.";
         },
