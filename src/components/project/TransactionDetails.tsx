@@ -11,7 +11,7 @@ export default function TransactionDetails({
 
   return (
     <div className="rounded-xl border p-6 shadow">
-      <h2 className="mb-4 text-xl font-semibold">
+      <h2 className="mb-4 text-xl font-semibold text-black">
         Transaction Details
       </h2>
 
@@ -21,7 +21,7 @@ export default function TransactionDetails({
             Transaction ID
           </p>
 
-          <p className="break-all font-medium">
+          <p className="break-all font-medium text-black">
             {transaction.id}
           </p>
         </div>
@@ -31,7 +31,7 @@ export default function TransactionDetails({
             Amount
           </p>
 
-          <p className="font-medium">
+          <p className="font-medium text-black">
             ₹ {transaction.amount}
           </p>
         </div>
@@ -41,7 +41,7 @@ export default function TransactionDetails({
             Status
           </p>
 
-          <p className="font-medium capitalize">
+          <p className="font-medium capitalize text-black">
             {transaction.status}
           </p>
         </div>
@@ -51,7 +51,7 @@ export default function TransactionDetails({
             Attempts
           </p>
 
-          <p className="font-medium">
+          <p className="font-medium text-black">
             {transaction.attempts}
           </p>
         </div>
@@ -61,7 +61,7 @@ export default function TransactionDetails({
             Timestamp
           </p>
 
-          <p className="font-medium">
+          <p className="font-medium text-black">
             {new Date(
               transaction.timestamp
             ).toLocaleString()}

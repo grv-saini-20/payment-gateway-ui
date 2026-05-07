@@ -141,7 +141,7 @@ export default function PaymentForm() {
         <div>
           <label
             htmlFor="cardHolder"
-            className="mb-1 block text-sm font-medium"
+            className="mb-1 block text-sm font-medium text-black"
           >
             Cardholder Name
           </label>
@@ -155,7 +155,7 @@ export default function PaymentForm() {
                 e.target.value
               )
             }
-            className="w-full rounded border p-2"
+            className="w-full rounded border p-2 border-gray-500 text-black"
             aria-describedby="cardHolder-error"
           />
 
@@ -172,7 +172,7 @@ export default function PaymentForm() {
         <div>
           <label
             htmlFor="cardNumber"
-            className="mb-1 block text-sm font-medium"
+            className="mb-1 block text-sm font-medium text-black"
           >
             Card Number
           </label>
@@ -189,7 +189,7 @@ export default function PaymentForm() {
                 )
               )
             }
-            className="w-full rounded border p-2"
+            className="w-full rounded border p-2 border-gray-500 text-black"
             aria-describedby="cardNumber-error"
           />
 
@@ -212,7 +212,7 @@ export default function PaymentForm() {
           <div className="flex-1">
             <label
               htmlFor="expiry"
-              className="mb-1 block text-sm font-medium"
+              className="mb-1 block text-sm font-medium text-black"
             >
               Expiry
             </label>
@@ -230,7 +230,7 @@ export default function PaymentForm() {
                   )
                 )
               }
-              className="w-full rounded border p-2"
+              className="w-full rounded border p-2 border-gray-500 text-black"
               aria-describedby="expiry-error"
             />
 
@@ -247,7 +247,7 @@ export default function PaymentForm() {
           <div className="flex-1">
             <label
               htmlFor="cvv"
-              className="mb-1 block text-sm font-medium"
+              className="mb-1 block text-sm font-medium text-black"
             >
               CVV
             </label>
@@ -269,7 +269,7 @@ export default function PaymentForm() {
                   )
                 )
               }
-              className="w-full rounded border p-2"
+              className="w-full rounded border p-2 border-gray-500 text-black"
               aria-describedby="cvv-error"
             />
 
@@ -287,7 +287,7 @@ export default function PaymentForm() {
         <div>
           <label
             htmlFor="amount"
-            className="mb-1 block text-sm font-medium"
+            className="mb-1 block text-sm font-medium text-black"
           >
             Amount
           </label>
@@ -302,7 +302,7 @@ export default function PaymentForm() {
                     | "USD"
                 )
               }
-              className="rounded border p-2"
+              className="rounded border p-2 border-gray-500 text-black"
             >
               <option value="INR">
                 INR
@@ -326,7 +326,7 @@ export default function PaymentForm() {
                       )
                 )
               }
-              className="w-full rounded border p-2"
+              className="w-full rounded border p-2 border-gray-500 text-black"
               aria-describedby="amount-error"
             />
           </div>
@@ -341,7 +341,6 @@ export default function PaymentForm() {
           )}
         </div>
 
-        {/* Submit */}
         <button
           type="submit"
           disabled={

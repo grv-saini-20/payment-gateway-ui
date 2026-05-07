@@ -68,7 +68,7 @@ export default function TransactionHistory({
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold">
+      <h2 className="text-xl font-semibold text-black">
         Transaction History
       </h2>
 
@@ -86,7 +86,7 @@ export default function TransactionHistory({
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium">
+                  <p className="font-medium text-black">
                     ₹ {tx.amount}
                   </p>
 

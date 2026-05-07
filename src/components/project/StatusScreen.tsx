@@ -36,7 +36,7 @@ export default function StatusScreen({
             Payment Successful
           </h2>
 
-          <p className="mt-2">
+          <p className="mt-2 text-black">
             Your payment was completed
             successfully.
           </p>
