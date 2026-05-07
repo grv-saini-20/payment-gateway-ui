@@ -29,6 +29,10 @@ export const usePayment = () => {
 
       const res = await fetch("/api/pay", {
         method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload),
         signal: controller.signal,
       });
 
