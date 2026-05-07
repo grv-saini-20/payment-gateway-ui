@@ -1,8 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useSelector } from "react-redux";
+
+import { RootState } from "@/store/store";
 
 import CardPreview from "./CardPreview";
+import StatusScreen from "./StatusScreen";
 
 import {
   detectCardType,
@@ -23,11 +27,30 @@ import { usePayment } from "@/hooks/usePayment";
 export default function PaymentForm() {
   const { makePayment } = usePayment();
 
-  const [cardHolder, setCardHolder] = useState("");
-  const [cardNumber, setCardNumber] = useState("");
-  const [expiry, setExpiry] = useState("");
+  const { status, error, attempts } =
+    useSelector(
+      (state: RootState) => state.payment
+    );
+
+
+  const [transactionId] = useState(
+    crypto.randomUUID()
+  );
+
+  const [cardHolder, setCardHolder] =
+    useState("");
+
+  const [cardNumber, setCardNumber] =
+    useState("");
+
+  const [expiry, setExpiry] =
+    useState("");
+
   const [cvv, setCVV] = useState("");
-  const [amount, setAmount] = useState(0);
+
+  const [amount, setAmount] =
+    useState<number | "">("");
+
   const [currency, setCurrency] =
     useState<"INR" | "USD">("INR");
 
@@ -38,15 +61,21 @@ export default function PaymentForm() {
 
   const errors = {
     cardHolder: validateCardHolder(cardHolder),
+
     cardNumber: validateCardNumber(cardNumber),
+
     expiry: validateExpiry(expiry),
+
     cvv: validateCVV(cvv, cardType),
-    amount: validateAmount(amount),
+
+    amount: validateAmount(
+      Number(amount)
+    ),
   };
 
-  const isFormValid = Object.values(errors).every(
-    (error) => error === ""
-  );
+  const isFormValid = Object.values(
+    errors
+  ).every((error) => error === "");
 
   const handleSubmit = async (
     e: React.FormEvent
@@ -55,16 +84,45 @@ export default function PaymentForm() {
 
     if (!isFormValid) return;
 
-    await makePayment({
-      id: crypto.randomUUID(),
-      cardHolder,
-      cardNumber,
-      expiry,
-      cvv,
-      amount,
-      currency,
-      attempts: 1,
-    });
+    try {
+      await makePayment({
+        id: transactionId,
+        cardHolder,
+        cardNumber,
+        expiry,
+        cvv,
+        amount: Number(amount),
+        currency,
+        attempts: 1,
+      });
+    } catch (error) {
+      console.error(
+        "Payment submission failed:",
+        error
+      );
+    }
+  };
+
+  const handleRetry = async () => {
+    if (attempts >= 3) return;
+
+    try {
+      await makePayment({
+        id: transactionId,
+        cardHolder,
+        cardNumber,
+        expiry,
+        cvv,
+        amount: Number(amount),
+        currency,
+        attempts: attempts + 1,
+      });
+    } catch (error) {
+      console.error(
+        "Retry payment failed:",
+        error
+      );
+    }
   };
 
   return (
@@ -93,7 +151,9 @@ export default function PaymentForm() {
             type="text"
             value={cardHolder}
             onChange={(e) =>
-              setCardHolder(e.target.value)
+              setCardHolder(
+                e.target.value
+              )
             }
             className="w-full rounded border p-2"
             aria-describedby="cardHolder-error"
@@ -124,7 +184,9 @@ export default function PaymentForm() {
             maxLength={19}
             onChange={(e) =>
               setCardNumber(
-                formatCardNumber(e.target.value)
+                formatCardNumber(
+                  e.target.value
+                )
               )
             }
             className="w-full rounded border p-2"
@@ -132,7 +194,8 @@ export default function PaymentForm() {
           />
 
           <div className="mt-1 text-sm text-gray-500">
-            Card Type: {cardType.toUpperCase()}
+            Card Type:{" "}
+            {cardType.toUpperCase()}
           </div>
 
           {errors.cardNumber && (
@@ -162,7 +225,9 @@ export default function PaymentForm() {
               maxLength={5}
               onChange={(e) =>
                 setExpiry(
-                  formatExpiry(e.target.value)
+                  formatExpiry(
+                    e.target.value
+                  )
                 )
               }
               className="w-full rounded border p-2"
@@ -192,11 +257,16 @@ export default function PaymentForm() {
               type="password"
               value={cvv}
               maxLength={
-                cardType === "amex" ? 4 : 3
+                cardType === "amex"
+                  ? 4
+                  : 3
               }
               onChange={(e) =>
                 setCVV(
-                  e.target.value.replace(/\D/g, "")
+                  e.target.value.replace(
+                    /\D/g,
+                    ""
+                  )
                 )
               }
               className="w-full rounded border p-2"
@@ -227,21 +297,34 @@ export default function PaymentForm() {
               value={currency}
               onChange={(e) =>
                 setCurrency(
-                  e.target.value as "INR" | "USD"
+                  e.target.value as
+                    | "INR"
+                    | "USD"
                 )
               }
               className="rounded border p-2"
             >
-              <option value="INR">INR</option>
-              <option value="USD">USD</option>
+              <option value="INR">
+                INR
+              </option>
+
+              <option value="USD">
+                USD
+              </option>
             </select>
 
             <input
               id="amount"
               type="number"
-              value={amount || ""}
+              value={amount}
               onChange={(e) =>
-                setAmount(Number(e.target.value))
+                setAmount(
+                  e.target.value === ""
+                    ? ""
+                    : Number(
+                        e.target.value
+                      )
+                )
               }
               className="w-full rounded border p-2"
               aria-describedby="amount-error"
@@ -258,14 +341,27 @@ export default function PaymentForm() {
           )}
         </div>
 
+        {/* Submit */}
         <button
           type="submit"
-          disabled={!isFormValid}
+          disabled={
+            !isFormValid ||
+            status === "processing"
+          }
           className="w-full rounded bg-black px-4 py-3 text-white disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Pay Now
+          {status === "processing"
+            ? "Processing..."
+            : "Pay Now"}
         </button>
       </form>
+
+      <StatusScreen
+        status={status}
+        error={error}
+        attempts={attempts}
+        onRetry={handleRetry}
+      />
     </div>
   );
 }

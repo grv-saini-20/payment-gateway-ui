@@ -17,7 +17,7 @@ export default function CardPreview({
     cardNumber || "•••• •••• •••• ••••";
 
   return (
-    <div className="w-full max-w-md rounded-2xl bg-gradient-to-r from-slate-900 to-slate-700 p-6 text-white shadow-xl">
+    <div className="w-full max-w-md rounded-2xl bg-linear-to-r from-slate-900 to-slate-700 p-6 text-white shadow-xl">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">
           Payment Card

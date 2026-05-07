@@ -5,8 +5,11 @@ import { transactionReducer } from "@/slices/transactionSlice";
 const store = configureStore({
     reducer: {
         payment: paymentReducer,
-        transactions: transactionReducer
+        transaction: transactionReducer
     }
 })
 
 export default store;
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
